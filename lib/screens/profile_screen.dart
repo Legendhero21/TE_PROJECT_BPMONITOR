@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -8,22 +9,20 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController ageController = TextEditingController();
-  final TextEditingController medicalHistoryController = TextEditingController();
-  final TextEditingController bpProblemsController = TextEditingController();
-  final TextEditingController emergencyContactController = TextEditingController();
-  final TextEditingController doctorNameController = TextEditingController();
-  final TextEditingController doctorClinicController = TextEditingController();
-  final TextEditingController doctorContactController = TextEditingController();
+  final nameController = TextEditingController();
+  final ageController = TextEditingController();
+  final medicalHistoryController = TextEditingController();
+  final bpProblemsController = TextEditingController();
+  final emergencyContactController = TextEditingController();
+  final doctorNameController = TextEditingController();
+  final doctorClinicController = TextEditingController();
+  final doctorContactController = TextEditingController();
+  final medicineInputController = TextEditingController();
 
   List<String> medicines = [];
-
-  final TextEditingController medicineInputController = TextEditingController();
-
   String selectedPatientType = "Normal";
 
-  final List<String> patientTypes = [
+  final patientTypes = [
     "Normal",
     "Athlete / Sports Person",
     "Low BP Patient",
@@ -32,12 +31,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _loadProfile();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Profile"),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: Text("Profile"), centerTitle: true),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(
@@ -82,17 +84,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   });
                 },
                 items: patientTypes.map((type) {
-                  return DropdownMenuItem(
-                    value: type,
-                    child: Text(type),
-                  );
+                  return DropdownMenuItem(value: type, child: Text(type));
                 }).toList(),
               ),
             ),
 
             SizedBox(height: 20),
             Text("Medicines Prescribed", style: _sectionTitleStyle()),
-
             Row(
               children: [
                 Expanded(
@@ -112,8 +110,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 )
               ],
             ),
-
-            SizedBox(height: 10),
             ...medicines.map((medicine) => ListTile(
               title: Text(medicine),
               trailing: IconButton(
@@ -128,9 +124,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             SizedBox(height: 30),
             ElevatedButton(
-              onPressed: () {
-                _saveProfile();
-              },
+              onPressed: _saveProfile,
               style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(vertical: 16),
                 textStyle: TextStyle(fontSize: 18),
@@ -163,13 +157,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
   }
 
-  void _saveProfile() {
-    // Here you can later save the data locally (ObjectBox, SQLite, SharedPreferences)
+  Future<void> _saveProfile() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString("name", nameController.text);
+    await prefs.setString("age", ageController.text);
+    await prefs.setString("medicalHistory", medicalHistoryController.text);
+    await prefs.setString("bpProblems", bpProblemsController.text);
+    await prefs.setString("emergencyContact", emergencyContactController.text);
+    await prefs.setString("doctorName", doctorNameController.text);
+    await prefs.setString("doctorClinic", doctorClinicController.text);
+    await prefs.setString("doctorContact", doctorContactController.text);
+    await prefs.setString("patientType", selectedPatientType);
+    await prefs.setStringList("medicines", medicines);
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: Text("Profile Saved"),
-        content: Text("Your profile information has been saved successfully."),
+        content: Text("Your profile information has been saved locally."),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -178,5 +183,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ],
       ),
     );
+  }
+
+  Future<void> _loadProfile() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      nameController.text = prefs.getString("name") ?? '';
+      ageController.text = prefs.getString("age") ?? '';
+      medicalHistoryController.text = prefs.getString("medicalHistory") ?? '';
+      bpProblemsController.text = prefs.getString("bpProblems") ?? '';
+      emergencyContactController.text = prefs.getString("emergencyContact") ?? '';
+      doctorNameController.text = prefs.getString("doctorName") ?? '';
+      doctorClinicController.text = prefs.getString("doctorClinic") ?? '';
+      doctorContactController.text = prefs.getString("doctorContact") ?? '';
+      selectedPatientType = prefs.getString("patientType") ?? "Normal";
+      medicines = prefs.getStringList("medicines") ?? [];
+    });
   }
 }

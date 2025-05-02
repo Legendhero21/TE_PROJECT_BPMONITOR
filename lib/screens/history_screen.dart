@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bp_monitor_app/models/bp_reading.dart';
 import 'package:bp_monitor_app/services/firebase_service.dart';
+import 'package:bp_monitor_app/screens/analysis_screen.dart';
 import 'package:intl/intl.dart';
 
 class HistoryScreen extends StatefulWidget {
@@ -50,16 +51,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
       appBar: AppBar(
         title: const Text("BP History"),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.analytics),
-            tooltip: 'Analyze',
-            onPressed: () {
-              // Placeholder for analysis screen
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Analysis screen coming soon...')),
-              );
-            },
-          ),
           if (_selectedIds.isNotEmpty)
             IconButton(
               icon: const Icon(Icons.delete),
@@ -96,6 +87,16 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 );
               },
             ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const AnalysisScreen()),
+          );
+        },
+        icon: const Icon(Icons.analytics),
+        label: const Text("Analyze"),
+      ),
     );
   }
 }

@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "581013387337",
-    "project_id": "bp-monitor-database",
-    "storage_bucket": "bp-monitor-database.firebasestorage.app"
+    "project_number": "934128067887",
+    "project_id": "bp-database-d0467",
+    "storage_bucket": "bp-database-d0467.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:581013387337:android:cd10e344405626e9b26798",
+        "mobilesdk_app_id": "1:934128067887:android:c8833e7ab1446034d1edda",
         "android_client_info": {
-          "package_name": "com.HealthTech.BPMonitorApp"
+          "package_name": "com.HealthTech.BPMonitor"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDCjmSXfFvyiy4mHSP8ma9cIeaaeMJNitc"
+          "current_key": "AIzaSyDr6maL_1_Cw1BQrwpZndz09AadxFolYxc"
         }
       ],
       "services": {

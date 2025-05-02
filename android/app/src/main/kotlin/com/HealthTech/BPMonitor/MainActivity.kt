@@ -1,5 +1,4 @@
-package com.HealthTech.BPMonitorApp
-
+package com.HealthTech.BPMonitor
 
 import io.flutter.embedding.android.FlutterActivity
 
